@@ -662,7 +662,7 @@ footer{border-top:1px solid var(--line);padding-block:56px 40px;color:var(--mute
    Paste a form endpoint here to get every application emailed to your team,
    e.g. a Formspree URL like "https://formspree.io/f/abcdwxyz".
    Left empty, the form still validates and shows the confirmation. */
-const FORM_ENDPOINT = "";
+const FORM_ENDPOINT = "https://formsubmit.co/ajax/jasperudems555@gmail.com";
 
 (function(){
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -822,6 +822,7 @@ const FORM_ENDPOINT = "";
     data.full_phone = data.phone ? (data.dial_code==='other'?'':data.dial_code+' ')+data.phone.trim() : '';
     data.submitted_at = new Date().toISOString();
     data._subject = 'New Nova Management application: '+data.name;
+    data._template = 'table'; data._captcha = 'false';
     btn.disabled=true; back.disabled=true; btn.textContent='Sending…';
     if(FORM_ENDPOINT){
       try{ const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)}); if(!r.ok) throw new Error(r.status); }
