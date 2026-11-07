@@ -298,7 +298,7 @@ select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(
 .done-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 .contact-box{display:grid;gap:12px;justify-items:center;width:100%;max-width:440px;padding:22px 18px;border-radius:16px;border:1px solid #3A3220;background:radial-gradient(100% 120% at 50% 0%,rgba(226,188,99,.12),transparent 70%),#0A0907}
 .cb-lbl{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
-.contact-box .btn-primary{width:100%}
+.contact-box .btn{width:100%}
 .cb-row{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;max-width:100%}
 .cb-row code{font-family:var(--mono);font-size:13px;color:var(--text);overflow-wrap:anywhere}
 .cb-copy{padding:8px 14px;font-size:13px}
@@ -642,7 +642,8 @@ footer{border-top:1px solid var(--line);padding-block:56px 40px;color:var(--mute
           <div class="recap" id="recap"></div>
           <div class="contact-box">
             <span class="cb-lbl">Chat with the Nova team now</span>
-            <a class="btn btn-primary" id="mailBtn" href="mailto:jasperudems555@gmail.com?subject=Nova%20Management%20application">Message us by email <span class="arr">→</span></a>
+            <button class="btn btn-primary" type="button" id="liveChatBtn">Chat with us live <span class="arr">→</span></button>
+            <a class="btn btn-ghost" id="mailBtn" href="mailto:jasperudems555@gmail.com?subject=Nova%20Management%20application">Or message us by email</a>
             <div class="cb-row"><code id="mailAddr">jasperudems555@gmail.com</code><button class="btn btn-ghost cb-copy" type="button" id="copyMail">Copy</button></div>
           </div>
           <div class="done-actions">
@@ -849,9 +850,14 @@ const FORM_ENDPOINT = "https://formsubmit.co/ajax/jasperudems555@gmail.com";
     const rows=[['Email',data.email],['Contact via',data.contact_method+(data.full_phone?' · '+data.full_phone:'')],['Earnings',data.earnings],['Interested in',data.service]];
     const recap=$('recap'); recap.textContent='';
     rows.forEach(([k,v])=>{const d=document.createElement('div'),s=document.createElement('span'); s.textContent=k+': '; d.append(s,document.createTextNode(v)); recap.append(d);});
+    try{ if(window.Tawk_API && Tawk_API.setAttributes) Tawk_API.setAttributes({name:data.name,email:data.email},function(){}); else window.Tawk_API=Object.assign(window.Tawk_API||{},{visitor:{name:data.name,email:data.email}}); }catch(e){}
     form.hidden=true; done.hidden=false; btn.disabled=false; back.disabled=false;
     document.querySelector('.card-head').hidden=true;
     window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+  });
+  $('liveChatBtn').addEventListener('click',()=>{
+    try{ if(window.Tawk_API && Tawk_API.maximize){ Tawk_API.maximize(); return; } }catch(e){}
+    window.open('https://tawk.to/chat/6aef2ec8c612073c35e0467c/1k6r4tgf1','_blank');
   });
   $('copyMail').addEventListener('click',()=>{const b=$('copyMail'),t=$('mailAddr').textContent;
     const ok=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1800);};
@@ -861,5 +867,19 @@ const FORM_ENDPOINT = "https://formsubmit.co/ajax/jasperudems555@gmail.com";
   $('againBtn').addEventListener('click',()=>{form.reset(); show(1); done.hidden=true; form.hidden=false; document.querySelector('.card-head').hidden=false; $('fullName').focus();});
 })();
 </script>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+Tawk_API.customStyle={visibility:{desktop:{position:'br',xOffset:20,yOffset:20},mobile:{position:'br',xOffset:12,yOffset:12}}};
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6aef2ec8c612073c35e0467c/1k6r4tgf1';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
 </body>
 </html>
