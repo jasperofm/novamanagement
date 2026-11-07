@@ -851,12 +851,14 @@ const FORM_ENDPOINT = "https://formsubmit.co/ajax/jasperudems555@gmail.com";
     const recap=$('recap'); recap.textContent='';
     rows.forEach(([k,v])=>{const d=document.createElement('div'),s=document.createElement('span'); s.textContent=k+': '; d.append(s,document.createTextNode(v)); recap.append(d);});
     try{ if(window.Tawk_API && Tawk_API.setAttributes) Tawk_API.setAttributes({name:data.name,email:data.email},function(){}); else window.Tawk_API=Object.assign(window.Tawk_API||{},{visitor:{name:data.name,email:data.email}}); }catch(e){}
+    try{ localStorage.setItem('nova_applied','1'); }catch(e){}
+    try{ if(window.Tawk_API && Tawk_API.showWidget) Tawk_API.showWidget(); }catch(e){}
     form.hidden=true; done.hidden=false; btn.disabled=false; back.disabled=false;
     document.querySelector('.card-head').hidden=true;
     window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
   });
   $('liveChatBtn').addEventListener('click',()=>{
-    try{ if(window.Tawk_API && Tawk_API.maximize){ Tawk_API.maximize(); return; } }catch(e){}
+    try{ if(window.Tawk_API && Tawk_API.maximize){ if(Tawk_API.showWidget) Tawk_API.showWidget(); Tawk_API.maximize(); return; } }catch(e){}
     window.open('https://tawk.to/chat/6aef2ec8c612073c35e0467c/1k6r4tgf1','_blank');
   });
   $('copyMail').addEventListener('click',()=>{const b=$('copyMail'),t=$('mailAddr').textContent;
@@ -870,6 +872,7 @@ const FORM_ENDPOINT = "https://formsubmit.co/ajax/jasperudems555@gmail.com";
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+Tawk_API.onLoad=function(){ var ok=false; try{ ok=localStorage.getItem('nova_applied')==='1'; }catch(e){} if(!ok && Tawk_API.hideWidget) Tawk_API.hideWidget(); };
 Tawk_API.customStyle={visibility:{desktop:{position:'br',xOffset:20,yOffset:20},mobile:{position:'br',xOffset:12,yOffset:12}}};
 (function(){
 var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
