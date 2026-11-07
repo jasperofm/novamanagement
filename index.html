@@ -837,7 +837,12 @@ const FORM_ENDPOINT = "https://formsubmit.co/ajax/jasperudems555@gmail.com";
     data._autoresponse = 'Hi '+data.name.trim().split(/\s+/)[0]+', thanks for applying to Nova Management! Our team will review your application and reach out within 24 hours on '+data.contact_method+' to book your free strategy call. Talk soon, the Nova team.';
     btn.disabled=true; back.disabled=true; btn.textContent='Sending…';
     if(FORM_ENDPOINT){
-      try{ const body=new URLSearchParams(); Object.entries(data).forEach(([k,v])=>body.append(k,v)); await fetch(FORM_ENDPOINT,{method:'POST',mode:'no-cors',body}); }
+      try{ await new Promise(res=>{
+        let fr=document.getElementById('fsFrame'); if(!fr){fr=document.createElement('iframe');fr.name='fsFrame';fr.id='fsFrame';fr.hidden=true;document.body.appendChild(fr);}
+        const f=document.createElement('form'); f.method='POST'; f.action=FORM_ENDPOINT.replace('/ajax/','/'); f.target='fsFrame'; f.hidden=true;
+        Object.entries(data).forEach(([k,v])=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v;f.appendChild(i);});
+        document.body.appendChild(f); f.submit(); setTimeout(()=>{f.remove();res();},700);
+      }); }
       catch(err){ btn.disabled=false; back.disabled=false; show(3); setErr('adult','We could not send your application. Check your connection and try again.'); return; }
     }
     $('doneName').textContent=data.name.trim().split(/\s+/)[0];
