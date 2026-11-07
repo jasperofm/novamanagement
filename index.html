@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nova Management</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Nova Management scales creators and models from wherever they are into the top 0.1% with 24/7 chatting, marketing and full-service management.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: "after-dark luxury". A live, drifting starfield sits behind the whole site.
+   One signature metallic gold gradient on black, a wide Syne wordmark whose O is a star,
+   Instrument Serif italic for the emotional words. Two views: Home and a dedicated Apply page (#apply). */
+:root{
+  --ink:#070604;
+  --panel:#110F0B;
+  --panel-2:#17140F;
+  --line:#29241A;
+  --text:#F5F0E6;
+  --muted:#A39A88;
+  --gold:#E2BC63;
+  --gold-deep:#B8862B;
+  --ok:#5BD6A0;
+  --err:#FF7A85;
+  --nova:linear-gradient(100deg,#F7E2A6 0%,#E2BC63 35%,#B8862B 70%,#F0D28A 100%);
+  --display:"Syne", "Arial Black", system-ui, sans-serif;
+  --serif:"Instrument Serif", "Times New Roman", Georgia, serif;
+  --body:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r:18px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--ink)}
+#sky{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:70;opacity:.06;mix-blend-mode:overlay}
+header,main,footer,.marquee{position:relative;z-index:1}
+a{color:inherit}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:1220px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--gold)}
+.serif{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em}
+.grad{background:linear-gradient(110deg,#C9973A 0%,#F7E2A6 22%,#E2BC63 38%,#FFF8E1 48%,#E2BC63 58%,#B8862B 78%,#F0D28A 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.06em;animation:sheen 5s ease-in-out infinite}
+@keyframes sheen{0%,35%{background-position:100% 0}75%,100%{background-position:0 0}}
+.btn-primary,.prog i.on,.seg input:checked + label,.badge{overflow:hidden}
+.btn-primary::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-20deg);animation:glint 4.5s ease-in-out infinite;pointer-events:none}
+.btn-primary:hover::after{animation-duration:1.1s}
+@keyframes glint{0%,60%{left:-60%}85%,100%{left:130%}}
+.wm .o{position:relative;filter:drop-shadow(0 0 6px rgba(226,188,99,.55))}
+.wm .o::after{content:"";position:absolute;inset:-18%;background:radial-gradient(circle,rgba(255,248,225,.9) 0 6%,transparent 22%);mix-blend-mode:screen;animation:twinkle 3.6s ease-in-out infinite;pointer-events:none}
+@keyframes twinkle{0%,70%,100%{opacity:0;transform:scale(.4) rotate(0)}82%{opacity:1;transform:scale(1) rotate(45deg)}}
+.gold-line{height:1px;background:linear-gradient(90deg,transparent,#E2BC63 30%,#FFF6DE 50%,#E2BC63 70%,transparent)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* Buttons */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 15px/1 var(--body);padding:17px 28px;border-radius:999px;border:1px solid transparent;text-decoration:none;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .2s,background .2s;will-change:transform}
+.btn .arr{transition:transform .25s}
+.btn:hover .arr{transform:translateX(4px)}
+.btn-primary{background:linear-gradient(180deg,#F7E2A6 0%,#E2BC63 45%,#C9973A 100%);border:1px solid #F3D99A;color:#0B0904;box-shadow:0 10px 40px -10px rgba(212,170,80,.45)}
+.btn-primary:hover{box-shadow:0 14px 50px -8px rgba(226,188,99,.6)}
+.btn-ghost{border-color:var(--line);color:var(--text);background:rgba(255,255,255,.03);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.btn-ghost:hover{border-color:#4A4232}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* Wordmark */
+.wm{font-family:var(--display);font-weight:800;letter-spacing:.02em;display:inline-flex;align-items:center;line-height:1}
+.wm .o{display:inline-block;width:.86em;height:.86em;margin:0 .02em}
+.wm .o svg{width:100%;height:100%;display:block;overflow:visible}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:rgba(7,6,4,.7);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.logo{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+.logo .wm{font-size:24px}
+.logo small{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase}
+.nav-links{display:flex;gap:30px;font-size:14px;font-weight:600;color:var(--muted)}
+.nav-links a{text-decoration:none;position:relative}
+.nav-links a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:var(--nova);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav .btn{padding:12px 20px;font-size:14px}
+@media (max-width:860px){.nav-links{display:none}.logo small{display:none}}
+
+/* Hero */
+.hero{position:relative;overflow:hidden}
+.hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;align-items:center;padding-block:84px 40px}
+.hero-copy{display:grid;gap:26px;min-width:0}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(42px,6.6vw,92px);line-height:.98;letter-spacing:-.035em}
+.hero h1 .serif{font-size:1.08em;letter-spacing:-.02em}
+.hero .lede{font-size:clamp(17px,1.7vw,20px);color:var(--muted);max-width:52ch}
+.hero .lede b{color:var(--text);font-weight:700}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px}
+.rise{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+.d1{animation-delay:.08s}.d2{animation-delay:.18s}.d3{animation-delay:.3s}.d4{animation-delay:.42s}
+@keyframes rise{from{transform:translateY(22px);opacity:.001}to{transform:none;opacity:1}}
+@media (max-width:940px){.hero-grid{grid-template-columns:1fr;padding-block:60px 24px}}
+
+.stats{display:grid;grid-template-columns:repeat(2,auto);justify-content:start;gap:22px 48px;margin-top:10px;padding-top:26px;border-top:1px solid var(--line)}
+.stat{display:grid;gap:4px;min-width:0}
+.stat b{white-space:nowrap;font-family:var(--display);font-weight:800;font-size:clamp(24px,2.6vw,34px);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.stat > span{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+#bigCount{font-size:clamp(40px,5.4vw,72px)}
+.stat:first-child{grid-column:1/-1}
+
+/* Live phone card */
+.live{justify-self:end;width:100%;max-width:380px;position:relative;transform:perspective(1000px) rotateY(-8deg) rotateX(4deg);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.live:hover{transform:perspective(1000px) rotateY(0) rotateX(0)}
+.live::before{content:"";position:absolute;inset:-30px;background:radial-gradient(closest-side,rgba(226,188,99,.25),transparent);filter:blur(20px);z-index:-1}
+.phone-card{background:linear-gradient(180deg,#1A1712,#0E0C09);border:1px solid #2F2A1F;border-radius:30px;padding:18px;box-shadow:0 40px 80px -30px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06)}
+.pc-top{display:flex;justify-content:space-between;align-items:center;padding:4px 6px 14px;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.06em}
+.pc-live{display:flex;align-items:center;gap:8px;color:var(--text)}
+.pc-live i{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:ping 1.8s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(91,214,160,.55)}100%{box-shadow:0 0 0 10px rgba(91,214,160,0)}}
+.feed{display:grid;gap:10px;align-content:start;height:300px;overflow:hidden;mask-image:linear-gradient(180deg,#000 75%,transparent);-webkit-mask-image:linear-gradient(180deg,#000 75%,transparent)}
+.ev{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--panel-2);border:1px solid var(--line);border-radius:16px;padding:12px;animation:pop .55s cubic-bezier(.2,.9,.25,1.2) both}
+@keyframes pop{from{transform:translateY(-14px) scale(.96);opacity:.001}to{transform:none;opacity:1}}
+.ev .ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-family:var(--mono);font-size:15px;font-weight:500;color:#0B0904;background:var(--nova)}
+.ev .ic.alt{background:#2A2519;color:var(--gold)}
+.ev b{display:block;font-size:14px;font-weight:700}
+.ev span{display:block;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev time{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.pc-foot{margin-top:14px;padding:14px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid var(--line);display:grid;gap:8px}
+.pc-foot .lbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.pc-foot .track{height:8px;border-radius:99px;background:#231F17;overflow:hidden}
+.pc-foot .fill{height:100%;width:72%;border-radius:99px;background:var(--nova);animation:grow 2.2s cubic-bezier(.2,.8,.2,1) .4s both}
+@keyframes grow{from{width:8%}to{width:72%}}
+.pc-note{font-family:var(--mono);font-size:10.5px;color:#6F6758;text-align:center;margin-top:10px;letter-spacing:.06em}
+@media (max-width:940px){.live{justify-self:start;transform:none}}
+
+/* Giant wordmark */
+.giant{position:relative;display:flex;justify-content:center;overflow:hidden;padding-top:24px;margin-bottom:-2.2vw;pointer-events:none;user-select:none}
+.giant .wm{font-size:clamp(90px,27vw,400px);letter-spacing:-.01em;line-height:.8;background:linear-gradient(180deg,rgba(245,240,230,.16),rgba(245,240,230,.02) 85%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.giant .wm .o svg{opacity:.5}
+
+/* Marquee */
+.marquee{border-block:1px solid var(--line);background:var(--panel);overflow:hidden}
+.track-m{display:flex;width:max-content;animation:slide 34s linear infinite}
+.marquee:hover .track-m{animation-play-state:paused}
+.track-m span{font-family:var(--display);font-weight:700;font-size:clamp(20px,2.6vw,32px);padding:20px 26px;white-space:nowrap;display:flex;align-items:center;gap:52px;letter-spacing:-.01em}
+.track-m span::after{content:"✦";color:var(--gold);font-size:.7em}
+.track-m span:nth-child(even){font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(24px,3vw,38px);color:var(--muted)}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* Sections */
+section{scroll-margin-top:70px}
+.band{padding-block:110px;position:relative}
+.head{display:grid;gap:18px;margin-bottom:56px;max-width:780px}
+.head h2{font-family:var(--display);font-weight:800;font-size:clamp(36px,5.2vw,68px);line-height:1;letter-spacing:-.03em}
+.head h2 .serif{font-size:1.06em}
+.head p{color:var(--muted);font-size:18px;max-width:58ch}
+@media (max-width:600px){.band{padding-block:76px}}
+
+/* Services: spotlight cards */
+.services{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.svc{--mx:50%;--my:0%;position:relative;overflow:hidden;background:rgba(18,16,12,.86);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:var(--r);padding:38px 34px;display:grid;gap:14px;align-content:start;min-width:0;transition:border-color .3s,transform .4s cubic-bezier(.2,.8,.2,1)}
+.svc::before{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx) var(--my),rgba(226,188,99,.14),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+.svc:hover{border-color:#4A4030;transform:translateY(-3px)}
+.svc:hover::before{opacity:1}
+.svc .idx{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.svc .idx em{font-style:normal;color:var(--gold)}
+.svc h3{font-family:var(--display);font-size:clamp(28px,3vw,36px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.svc p{color:var(--muted)}
+.svc ul{list-style:none;margin:8px 0 0;padding:16px 0 0;border-top:1px solid var(--line);display:grid;gap:9px;font-size:15px}
+.svc li{display:flex;gap:12px}
+.svc li::before{content:"✦";color:var(--gold);font-size:11px;line-height:24px}
+.svc.featured{background:linear-gradient(160deg,rgba(226,188,99,.13),rgba(212,170,80,.05) 50%,transparent 80%),rgba(18,16,12,.9);border-color:#3A3220}
+.svc .badge{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-radius:99px;background:var(--nova);color:#0B0904;font-weight:500}
+@media (max-width:780px){.services{grid-template-columns:1fr}.svc{padding:28px 22px}}
+
+/* Results ladder */
+.ladder{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;align-items:end}
+.rung{display:grid;gap:14px;min-width:0}
+.bar{border-radius:14px 14px 4px 4px;background:var(--nova);position:relative;transform-origin:bottom;animation:bar 1.2s cubic-bezier(.2,.8,.2,1) both}
+.rung:nth-child(1) .bar{height:30px;background:linear-gradient(180deg,#2D281D,#1A1712)}
+.rung:nth-child(2) .bar{height:100px;opacity:.5;animation-delay:.12s}
+.rung:nth-child(3) .bar{height:180px;opacity:.75;animation-delay:.24s}
+.rung:nth-child(4) .bar{height:280px;box-shadow:0 0 80px rgba(226,188,99,.35);animation-delay:.36s}
+.rung:nth-child(4) .bar::after{content:"TOP 0.1%";position:absolute;top:14px;left:14px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:#0B0904;font-weight:500}
+@keyframes bar{from{transform:scaleY(.15)}to{transform:none}}
+.amt{font-family:var(--display);font-weight:800;font-size:clamp(30px,3.8vw,50px);letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+.amt small{font-family:var(--mono);font-size:13px;font-weight:400;color:var(--muted);letter-spacing:0;margin-left:2px}
+.rung h3{font-family:var(--serif);font-style:italic;font-weight:400;font-size:24px;line-height:1}
+.rung p{color:var(--muted);font-size:14.5px}
+@media (max-width:860px){.ladder{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:40px}.rung:nth-child(4) .bar{height:210px}}
+@media (max-width:460px){.ladder{grid-template-columns:1fr}.bar{height:14px!important;border-radius:8px!important}.rung:nth-child(1) .bar{width:10%}.rung:nth-child(2) .bar{width:36%}.rung:nth-child(3) .bar{width:66%}.rung:nth-child(4) .bar{width:100%}.rung:nth-child(4) .bar::after{display:none}}
+.why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;margin-top:88px}
+.why div{display:grid;gap:10px;min-width:0;padding-top:22px;border-top:1px solid var(--line)}
+.why h3{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:-.01em}
+.why p{color:var(--muted)}
+@media (max-width:860px){.why{grid-template-columns:1fr;gap:28px}}
+
+/* Process */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));counter-reset:s;border-top:1px solid var(--line)}
+.steps li{counter-increment:s;padding:30px 24px 10px 0;display:grid;gap:12px;align-content:start;min-width:0;position:relative}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--display);font-weight:800;font-size:64px;line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px #4A4232;transition:-webkit-text-stroke-color .3s}
+.steps li:hover::before{-webkit-text-stroke:1px var(--gold)}
+.steps li::after{content:"";position:absolute;top:-4px;left:0;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.steps h3{font-family:var(--display);font-size:22px;font-weight:700}
+.steps p{color:var(--muted);font-size:15px}
+.steps .when{font-family:var(--mono);font-size:12px;color:var(--gold);letter-spacing:.06em}
+@media (max-width:900px){.steps{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:20px}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+
+/* FAQ */
+.faq-grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:56px;align-items:start}
+.faq-grid .head{position:sticky;top:110px;margin:0}
+@media (max-width:900px){.faq-grid{grid-template-columns:1fr;gap:28px}.faq-grid .head{position:static}}
+.faq{display:grid;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 0;font-weight:700;font-size:18px;transition:color .2s}
+.faq summary:hover{color:var(--gold)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:linear-gradient(var(--gold),var(--gold)) center/10px 1.5px no-repeat,linear-gradient(var(--gold),var(--gold)) center/1.5px 10px no-repeat;transition:transform .3s}
+.faq details[open] summary::after{transform:rotate(135deg)}
+.faq details p{color:var(--muted);padding:0 40px 24px 0;max-width:66ch}
+
+/* Closing CTA on home */
+.cta{padding-block:40px 120px}
+.cta-box{position:relative;overflow:hidden;border-radius:32px;padding:clamp(40px,7vw,90px) clamp(22px,5vw,72px);background:radial-gradient(80% 120% at 100% 0%,rgba(226,188,99,.20),transparent 60%),radial-gradient(70% 100% at 0% 100%,rgba(190,150,70,.12),transparent 60%),rgba(18,16,12,.9);border:1px solid #3A3220;display:grid;gap:26px;justify-items:start}
+.cta-box h2{font-family:var(--display);font-weight:800;font-size:clamp(36px,6vw,80px);line-height:.98;letter-spacing:-.035em;max-width:14ch}
+.cta-box p{color:var(--muted);font-size:18px;max-width:50ch}
+.cta-box .wm{position:absolute;right:-2%;bottom:-18%;font-size:clamp(120px,22vw,300px);color:rgba(255,255,255,.04);pointer-events:none}
+
+/* Apply page */
+.apply-page{padding-block:72px 110px;min-height:80vh}
+.back{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;margin-bottom:36px}
+.back:hover{color:var(--gold)}
+.apply-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:64px;align-items:start}
+.apply-side{display:grid;gap:24px;position:sticky;top:100px}
+.apply-side h1{font-family:var(--display);font-size:clamp(40px,5.4vw,72px);font-weight:800;line-height:.96;letter-spacing:-.035em}
+.apply-side h1 .serif{font-size:1.06em}
+.apply-side > p{color:var(--muted);font-size:17px;max-width:46ch}
+.next{display:grid;gap:0;border-top:1px solid var(--line);margin-top:6px}
+.next div{display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.next b{grid-row:span 2;font-family:var(--display);font-size:22px;font-weight:800;color:transparent;-webkit-text-stroke:1px var(--gold);line-height:1.1}
+.next strong{font-size:15px}
+.next span{color:var(--muted);font-size:14px}
+.trust{display:flex;flex-wrap:wrap;gap:10px}
+.trust span{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;padding:8px 12px;border:1px solid var(--line);border-radius:99px;color:var(--muted);background:rgba(18,16,12,.7)}
+@media (max-width:940px){.apply-grid{grid-template-columns:1fr;gap:40px}.apply-side{position:static}}
+
+.card{position:relative;background:linear-gradient(180deg,rgba(22,19,14,.96),rgba(14,12,9,.96));border-radius:26px;padding:36px;isolation:isolate;box-shadow:0 50px 100px -40px rgba(212,170,80,.18)}
+.card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(140deg,rgba(226,188,99,.65),rgba(212,170,80,.3) 40%,rgba(255,255,255,.05) 70%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;z-index:-1;pointer-events:none}
+.card-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:26px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.card-head > div:first-child{display:grid;gap:6px}
+.card-head h2{font-family:var(--display);font-size:24px;font-weight:800}
+.card-head span{font-family:var(--mono);font-size:11.5px;color:var(--gold);letter-spacing:.14em}
+.prog{display:flex;gap:6px;padding-bottom:6px}
+.prog i{width:34px;height:4px;border-radius:4px;background:var(--line);transition:background .4s}
+.prog i.on{background:var(--nova)}
+fieldset{border:0;margin:0;padding:0;min-width:0;display:grid;gap:18px}
+.step:not([hidden]){animation:stepIn .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes stepIn{from{opacity:.001;transform:translateX(18px)}to{opacity:1;transform:none}}
+.hint{font-size:14px;color:var(--muted);padding:14px 16px;border:1px dashed var(--line);border-radius:12px}
+.step-nav{display:flex;gap:10px;margin-top:6px}
+.step-nav .submit{flex:1;margin:0}
+@media (max-width:520px){.card{padding:24px 18px}}
+form{display:grid;gap:18px}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:600px){.row{grid-template-columns:1fr}}
+.field{display:grid;gap:8px;min-width:0}
+label,.legend{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#D6CFC0}
+label .opt{font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0}
+input,select,textarea{width:100%;font:500 15px/1.4 var(--body);color:var(--text);background:#0A0907;border:1px solid var(--line);border-radius:12px;padding:14px 15px;transition:border-color .2s,box-shadow .2s}
+input::placeholder,textarea::placeholder{color:#655D4E}
+input:hover,select:hover,textarea:hover{border-color:#3E3729}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(226,188,99,.12)}
+textarea{min-height:110px;resize:vertical}
+select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 15px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:38px}
+.phone{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.seg label{font-size:14px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:10px 16px;cursor:pointer;background:#0A0907;transition:all .2s;user-select:none}
+.seg label:hover{border-color:#4A4232}
+.seg input:checked + label{background:var(--nova);border-color:transparent;color:#0B0904}
+.seg input:focus-visible + label{outline:2px solid var(--gold);outline-offset:2px}
+.agree{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--muted);font-weight:500;letter-spacing:0;text-transform:none}
+.agree input{width:18px;height:18px;margin-top:2px;flex:none;accent-color:#D4A94E}
+.err{color:var(--err);font-size:13px}
+.field.invalid input,.field.invalid select{border-color:var(--err)}
+.submit{width:100%;padding:19px;font-size:16px;margin-top:6px}
+.submit[disabled]{opacity:.6;cursor:progress}
+.fine{font-size:12.5px;color:var(--muted);text-align:center}
+.done{display:grid;gap:18px;text-align:center;justify-items:center;padding:28px 6px}
+.done .burst{width:84px;height:84px;animation:spin 8s linear infinite}
+.done h3{font-family:var(--display);font-size:clamp(30px,4vw,42px);font-weight:800;letter-spacing:-.02em}
+.done p{color:var(--muted);max-width:44ch}
+.done .recap{font-family:var(--mono);font-size:13px;color:var(--text);background:#0A0907;border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:left;display:grid;gap:6px;width:100%;max-width:440px;overflow-wrap:anywhere}
+.done .recap span{color:var(--muted)}
+.done-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+
+/* Footer */
+footer{border-top:1px solid var(--line);padding-block:56px 40px;color:var(--muted);font-size:14px;background:rgba(7,6,4,.6)}
+.foot{display:grid;gap:36px}
+.foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:24px}
+.foot-top .wm{font-size:clamp(48px,8vw,96px);color:var(--text)}
+.foot-top p{font-family:var(--serif);font-style:italic;font-size:24px;color:var(--text);max-width:22ch}
+.foot-bot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding-top:24px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;letter-spacing:.04em}
+.foot-bot a{text-decoration:none}
+.foot-bot a:hover{color:var(--gold)}
+.view{animation:fade .5s ease both}
+@keyframes fade{from{opacity:.001;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="novaG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F7E2A6"/><stop offset=".5" stop-color="#C9A04A"/><stop offset="1" stop-color="#B8862B"/>
+    </linearGradient>
+    <symbol id="novaO" viewBox="-50 -50 100 100">
+      <circle r="44" fill="none" stroke="url(#novaG)" stroke-width="9"/>
+      <path d="M0-30 C3-6 6-3 30 0 C6 3 3 6 0 30 C-3 6 -6 3 -30 0 C-6-3 -3-6 0-30Z" fill="url(#novaG)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Nova Management home">
+      <span class="wm">N<span class="o"><svg><use href="#novaO"/></svg></span>VA</span>
+      <small>Management</small>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#services">Services</a>
+      <a href="#results">Results</a>
+      <a href="#process">Process</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn-primary mag" href="#apply" id="navCta">Apply now</a>
+  </div>
+</header>
+
+<!-- ============ HOME ============ -->
+<main id="view-home" class="view">
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow rise">Creator management agency</p>
+        <h1 class="rise d1">We scale creators into the <span class="serif grad">top 0.1%.</span></h1>
+        <p class="lede rise d2">Wherever you are today, <b>we take you to the top</b>. Nova builds your brand, grows you on every platform, runs your chats around the clock and manages everything in between. You create. We scale.</p>
+        <div class="hero-ctas rise d3">
+          <a class="btn btn-primary mag" href="#apply">Apply to join Nova <span class="arr">→</span></a>
+          <a class="btn btn-ghost" href="#services">See what we do</a>
+        </div>
+        <div class="stats rise d4">
+          <div class="stat"><b class="grad" id="bigCount">$100,000</b><span>Monthly goal we build toward</span></div>
+          <div class="stat"><b><span class="count" data-to="24">24</span>/7</b><span>Chatting coverage</span></div>
+          <div class="stat"><b>Top <span class="count" data-to="0.1" data-dec="1">0.1</span>%</b><span>Where we take you</span></div>
+        </div>
+      </div>
+      <div class="live rise d4" aria-label="Example of what 24/7 management looks like">
+        <div class="phone-card">
+          <div class="pc-top"><span class="pc-live"><i></i>NOVA LIVE</span><span id="clock">03:12 AM</span></div>
+          <div class="feed" id="feed"></div>
+          <div class="pc-foot">
+            <div class="lbl"><span>Road to the top 0.1%</span><span>On track</span></div>
+            <div class="track"><div class="fill"></div></div>
+          </div>
+        </div>
+        <p class="pc-note">EXAMPLE OF A NIGHT SHIFT ON YOUR PAGE</p>
+      </div>
+    </div>
+    <div class="giant" aria-hidden="true"><span class="wm">N<span class="o"><svg><use href="#novaO"/></svg></span>VA</span></div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="track-m">
+      <span>24/7 Chatting</span><span>never miss a fan</span><span>Branding</span><span>a name fans remember</span><span>Marketing</span><span>traffic that converts</span><span>Hybrid model</span><span>you stay in control</span><span>Full management</span><span>the top 0.1%</span>
+      <span>24/7 Chatting</span><span>never miss a fan</span><span>Branding</span><span>a name fans remember</span><span>Marketing</span><span>traffic that converts</span><span>Hybrid model</span><span>you stay in control</span><span>Full management</span><span>the top 0.1%</span>
+    </div>
+  </div>
+
+  <section class="band" id="services">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">What we offer</p>
+        <h2>Everything your page needs. <span class="serif grad">Under one roof.</span></h2>
+        <p>Go hybrid and keep a hand on the wheel, or hand us the keys with full management. Either way, chatting and marketing run every hour of every day.</p>
+      </div>
+      <div class="services">
+        <article class="svc featured">
+          <div class="idx"><span>Hybrid</span><span class="badge">Most popular</span></div>
+          <h3>Hybrid model</h3>
+          <p>You don't have to be online all day or do it all yourself. We carry the heavy lifting while you keep control of the parts you love.</p>
+          <ul>
+            <li>Less time on your phone, more income</li>
+            <li>You create, we chat, market and optimize</li>
+            <li>Shared content calendar and weekly targets</li>
+            <li>Direct line to your account manager</li>
+          </ul>
+        </article>
+        <article class="svc">
+          <div class="idx"><span>Around the clock</span><em>24/7</em></div>
+          <h3>24/7 chatting</h3>
+          <p>Trained chatters who write in your voice across every time zone, so no fan and no sale ever goes cold.</p>
+          <ul>
+            <li>Full coverage, 24 hours a day, 7 days a week</li>
+            <li>Personalized messages and PPV that convert</li>
+            <li>Big spenders tracked and treated like VIPs</li>
+          </ul>
+        </article>
+        <article class="svc">
+          <div class="idx"><span>Brand &amp; growth</span><em>↗</em></div>
+          <h3>Branding &amp; marketing</h3>
+          <p>We build a brand fans remember and grow you on Instagram, TikTok, X and Reddit with a steady flow of new subscribers.</p>
+          <ul>
+            <li>Personal brand, look and content direction</li>
+            <li>Viral hooks, content ideas and posting schedules</li>
+            <li>Promo campaigns and collabs that pay back</li>
+          </ul>
+        </article>
+        <article class="svc">
+          <div class="idx"><span>Done for you</span><em>✦</em></div>
+          <h3>Full management</h3>
+          <p>We run the entire business behind your page. You show up, create, and watch the numbers climb.</p>
+          <ul>
+            <li>Page setup, pricing and bundle strategy</li>
+            <li>Analytics, reporting and monthly reviews</li>
+            <li>Brand protection and leak takedowns</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="results">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Results</p>
+        <h2>From where you are to <span class="serif grad">the top 0.1%.</span></h2>
+        <p>Whether you are just starting or already earning, we meet you at your level and build the plan that takes you up from there.</p>
+      </div>
+      <div class="ladder">
+        <div class="rung">
+          <div class="bar"></div>
+          <div class="amt">Audit</div>
+          <h3>Where you are now</h3>
+          <p>We study your page, niche, pricing and fans to find exactly what is holding you back.</p>
+        </div>
+        <div class="rung">
+          <div class="bar"></div>
+          <div class="amt">Build</div>
+          <h3>Brand &amp; traction</h3>
+          <p>24/7 chatting goes live and daily traffic starts flowing in from social.</p>
+        </div>
+        <div class="rung">
+          <div class="bar"></div>
+          <div class="amt">Scale</div>
+          <h3>Momentum</h3>
+          <p>PPV and upsells dialed in, top spenders on VIP care, new platforms added.</p>
+        </div>
+        <div class="rung">
+          <div class="bar"></div>
+          <div class="amt grad">0.1%</div>
+          <h3>The top 0.1%</h3>
+          <p>A full machine: scaled traffic, a high-converting chat team and brand deals.</p>
+        </div>
+      </div>
+      <div class="why">
+        <div>
+          <h3>One team, every lever</h3>
+          <p>Chatting, marketing and management talk to each other daily, so nothing falls through the cracks.</p>
+        </div>
+        <div>
+          <h3>Your voice, protected</h3>
+          <p>Chatters learn your style and your boundaries before they send a single message for you.</p>
+        </div>
+        <div>
+          <h3>Numbers you can see</h3>
+          <p>Clear reporting on revenue, subscribers and spend, so you always know what is working.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="process">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">How it works</p>
+        <h2>From application to <span class="serif grad">the next level.</span></h2>
+      </div>
+      <ol class="steps">
+        <li><h3>Apply</h3><p>Fill out our short application with your details and where your page is today.</p><span class="when">2 minutes</span></li>
+        <li><h3>Strategy call</h3><p>We reach out on WhatsApp, iMessage or email to talk goals and map your plan.</p><span class="when">Within 24 hours</span></li>
+        <li><h3>Onboarding</h3><p>We learn your voice, set up chatting and marketing, and lock in your targets.</p><span class="when">First week</span></li>
+        <li><h3>Scale</h3><p>We run the plan, report weekly and keep pushing your page to the next level.</p><span class="when">Every month after</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band" id="faq">
+    <div class="wrap faq-grid">
+      <div class="head">
+        <p class="eyebrow">FAQ</p>
+        <h2>Questions creators <span class="serif grad">ask us.</span></h2>
+        <p>Still unsure? Apply anyway and ask us on your strategy call.</p>
+      </div>
+      <div class="faq">
+        <details open><summary>Do I need to be making money already?</summary><p>No. We work with creators and models at every level, from brand new pages to established accounts that want to break into the top 0.1%. Your plan is built around where you are today.</p></details>
+        <details><summary>What is the difference between hybrid and full management?</summary><p>With the hybrid model you keep control of some parts of your page, like posting or certain chats, while we handle the rest. With full management we run the whole operation and you focus only on creating.</p></details>
+        <details><summary>Who chats with my fans?</summary><p>Our trained in-house chatting team, working in shifts so your page is covered 24/7. They learn your voice, your limits and your fans before they start.</p></details>
+        <details><summary>How do you get paid?</summary><p>We work on a revenue share, so we only earn when you earn. We go over the exact split on your strategy call.</p></details>
+        <details><summary>Is my information kept private?</summary><p>Yes. Your details are only used by our team to contact you about your application. We never share them, and we sign an agreement before handling any of your accounts.</p></details>
+        <details><summary>How fast will I hear back?</summary><p>Usually within 24 hours, on the contact method you pick in your application: WhatsApp, iMessage or email.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <div class="cta-box">
+        <p class="eyebrow">Now accepting creators &amp; models</p>
+        <h2>Your road to <span class="serif grad">the top 0.1%</span> starts here.</h2>
+        <p>Spots are limited so every creator gets a full team. Apply in two minutes and we'll be in touch within 24 hours.</p>
+        <a class="btn btn-primary mag" href="#apply">Start your application <span class="arr">→</span></a>
+        <span class="wm" aria-hidden="true">N<span class="o"><svg><use href="#novaO"/></svg></span>VA</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ APPLY PAGE ============ -->
+<main id="view-apply" class="view" hidden>
+  <div class="wrap apply-page">
+    <a class="back" href="#top">← Back to home</a>
+    <div class="apply-grid">
+      <div class="apply-side">
+        <p class="eyebrow">Creator application</p>
+        <h1>Join the <span class="serif grad">top 0.1%.</span></h1>
+        <p>Tell us about you and your page. A member of the Nova team will personally reach out to set up your free strategy call.</p>
+        <div class="next">
+          <div><b>01</b><strong>Send your application</strong><span>Takes about 2 minutes.</span></div>
+          <div><b>02</b><strong>We reach out within 24 hours</strong><span>On WhatsApp, iMessage or email, your choice.</span></div>
+          <div><b>03</b><strong>Free strategy call</strong><span>Your goals, your plan, zero commitment.</span></div>
+        </div>
+        <div class="trust"><span>100% PRIVATE</span><span>NO UPFRONT FEES</span><span>18+ ONLY</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div><span id="stepLbl">STEP 1 OF 3</span><h2 id="stepTitle">About you</h2></div>
+          <div class="prog" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+        </div>
+        <form id="applyForm" novalidate>
+          <fieldset class="step" data-step="1" data-title="About you">
+            <div class="row">
+            <div class="field">
+              <label for="fullName">Full name</label>
+              <input id="fullName" name="name" autocomplete="name" placeholder="Your name" required>
+              <span class="err" data-for="fullName"></span>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+              <span class="err" data-for="email"></span>
+            </div>
+            </div>
+          <div class="field">
+              <label for="country">Country</label>
+              <input id="country" name="country" autocomplete="country-name" placeholder="Where you're based">
+            </div>
+          </fieldset>
+          <fieldset class="step" data-step="2" data-title="How we reach you" hidden>
+          <div class="field">
+            <span class="legend" id="contactLegend">Best way to reach you</span>
+            <div class="seg" role="radiogroup" aria-labelledby="contactLegend">
+              <input type="radio" id="cWhatsapp" name="contact_method" value="WhatsApp" checked><label for="cWhatsapp">WhatsApp</label>
+              <input type="radio" id="cImessage" name="contact_method" value="iMessage"><label for="cImessage">iMessage</label>
+              <input type="radio" id="cEmail" name="contact_method" value="Email"><label for="cEmail">Email</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="phone">WhatsApp or iMessage number</label>
+            <div class="phone">
+              <select id="dial" name="dial_code" aria-label="Country code">
+                <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+31">🇳🇱 +31</option><option value="+52">🇲🇽 +52</option><option value="+55">🇧🇷 +55</option><option value="+57">🇨🇴 +57</option><option value="+234">🇳🇬 +234</option><option value="+27">🇿🇦 +27</option><option value="+971">🇦🇪 +971</option><option value="+63">🇵🇭 +63</option><option value="other">Other</option>
+              </select>
+              <input id="phone" name="phone" type="tel" autocomplete="tel-national" inputmode="tel" placeholder="Phone number">
+            </div>
+            <span class="err" data-for="phone"></span>
+          </div>
+            <p class="hint">We'll message you personally to book your free strategy call. No bots, no spam.</p>
+          </fieldset>
+          <fieldset class="step" data-step="3" data-title="Your page" hidden>
+            <div class="field">
+              <label for="handle">Main social or page link</label>
+              <input id="handle" name="handle" placeholder="@yourname or link">
+            </div>
+            <div class="row">
+            <div class="field">
+              <label for="earnings">Current monthly earnings</label>
+              <select id="earnings" name="earnings" required>
+                <option value="">Choose one</option><option>Just starting ($0)</option><option>Under $1K</option><option>$1K to $5K</option><option>$5K to $20K</option><option>$20K to $50K</option><option>$50K+</option>
+              </select>
+              <span class="err" data-for="earnings"></span>
+            </div>
+            <div class="field">
+              <label for="service">Service you want</label>
+              <select id="service" name="service">
+                <option>Not sure yet</option><option>Hybrid model</option><option>24/7 chatting</option><option>Branding &amp; marketing</option><option>Full management</option>
+              </select>
+            </div>
+            </div>
+          <div class="field">
+            <label for="message">Anything else? <span class="opt">(optional)</span></label>
+            <textarea id="message" name="message" placeholder="Your goals, platforms you're on, questions for us…"></textarea>
+          </div>
+          <div class="field">
+            <label class="agree" for="adult"><input type="checkbox" id="adult" name="adult_confirmed" value="yes"> I confirm I am 18 or older and agree that Nova Management may contact me about my application.</label>
+            <span class="err" data-for="adult"></span>
+          </div>
+          </fieldset>
+          <div class="step-nav">
+            <button class="btn btn-ghost" type="button" id="backBtn" hidden>← Back</button>
+            <button class="btn btn-primary submit" type="submit" id="submitBtn">Continue <span class="arr">→</span></button>
+          </div>
+          <p class="fine">We reply within 24 hours. Your details stay private.</p>
+        </form>
+
+        <div class="done" id="done" hidden>
+          <svg class="burst" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#novaO"/></svg>
+          <h3>You're in, <span id="doneName"></span>.</h3>
+          <p>Thanks for applying to Nova Management. Our team will review your application and reach out within 24 hours to book your strategy call.</p>
+          <div class="recap" id="recap"></div>
+          <div class="done-actions">
+            <a class="btn btn-primary" href="#top">Back to home</a>
+            <button class="btn btn-ghost" type="button" id="againBtn">Submit another</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="foot-top">
+      <span class="wm">N<span class="o"><svg><use href="#novaO"/></svg></span>VA</span>
+      <p>You create. We scale you into the top 0.1%.</p>
+    </div>
+    <div class="foot-bot">
+      <span>© <span id="yr">2026</span> NOVA MANAGEMENT</span>
+      <span><a href="#services">SERVICES</a> · <a href="#results">RESULTS</a> · <a href="#faq">FAQ</a> · <a href="#apply">APPLY</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- Where applications go ----------
+   Paste a form endpoint here to get every application emailed to your team,
+   e.g. a Formspree URL like "https://formspree.io/f/abcdwxyz".
+   Left empty, the form still validates and shows the confirmation. */
+const FORM_ENDPOINT = "";
+
+(function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = window.matchMedia('(pointer: fine)').matches;
+  const $ = id => document.getElementById(id);
+  $('yr').textContent = new Date().getFullYear();
+
+  /* ---------- Pages: Home and Apply ---------- */
+  const home = $('view-home'), apply = $('view-apply'), navCta = $('navCta');
+  function route(){
+    const h = location.hash.replace('#','');
+    const onApply = h === 'apply';
+    home.hidden = onApply; apply.hidden = !onApply;
+    navCta.hidden = onApply;
+    document.title = onApply ? 'Apply · Nova Management' : 'Nova Management';
+    if(onApply){ window.scrollTo(0,0); }
+    else if(h && h !== 'top'){ const t = $(h); if(t) requestAnimationFrame(()=>t.scrollIntoView({behavior:'auto'})); }
+    else if(h === 'top'){ window.scrollTo(0,0); }
+  }
+  window.addEventListener('hashchange', route); route();
+
+  /* ---------- Film grain ---------- */
+  (function(){
+    const g = document.createElement('canvas'), x = g.getContext('2d'); g.width = g.height = 160;
+    const d = x.createImageData(160,160);
+    for(let i=0;i<d.data.length;i+=4){const v=Math.random()*255;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255}
+    x.putImageData(d,0,0);
+    const div = document.createElement('div'); div.className='grain'; div.style.backgroundImage='url('+g.toDataURL()+')'; document.body.appendChild(div);
+  })();
+
+  /* ---------- Living starfield: drifting stars, parallax, shooting stars, nova glow ---------- */
+  const c = $('sky'), ctx = c.getContext('2d');
+  let stars=[], shots=[], W=0, H=0, px=.8, py=.22, tx=.8, ty=.22, nextShot=900, last=0;
+  const COLORS=['#F5F0E6','#F5F0E6','#F5F0E6','#F3D99A','#FFF6DE'];
+  function size(){
+    const dpr = Math.min(window.devicePixelRatio||1,2);
+    W=window.innerWidth; H=window.innerHeight; c.width=W*dpr; c.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    stars = Array.from({length:Math.min(420,Math.round(W*H/3600))},()=>{const z=Math.random();return {x:Math.random()*W,y:Math.random()*H,z,r:.25+z*1.35,p:Math.random()*6.28,s:.5+Math.random()*1.5,c:COLORS[Math.floor(Math.random()*COLORS.length)]};});
+  }
+  function shoot(){
+    const fromTop = Math.random()<.7;
+    shots.push({x: fromTop ? W*(.3+Math.random()*.8) : W+20, y: fromTop ? -20 : H*Math.random()*.5, vx:-(7+Math.random()*6), vy:3+Math.random()*3, life:0, max:70+Math.random()*40});
+  }
+  function star4(x,y,r,a){ctx.globalAlpha=a*.6;ctx.beginPath();ctx.moveTo(x-r*4,y);ctx.lineTo(x+r*4,y);ctx.moveTo(x,y-r*4);ctx.lineTo(x,y+r*4);ctx.stroke();}
+  function draw(t){
+    const dt = Math.min(50, t-last || 16); last = t; const k = dt/16.7;
+    px += (tx-px)*.03; py += (ty-py)*.03;
+    const sc = window.scrollY || 0;
+    ctx.clearRect(0,0,W,H);
+    // nova glow (fades as you scroll down)
+    const fadeG = 1;
+    const cx=W*px, cy=H*py, R=Math.max(W,H)*.6, pulse = 1;
+    let g=ctx.createRadialGradient(cx,cy,0,cx,cy,R*pulse);
+    g.addColorStop(0,'rgba(226,188,99,'+(.30*fadeG)+')');g.addColorStop(.16,'rgba(180,140,60,'+(.15*fadeG)+')');g.addColorStop(.45,'rgba(110,85,35,.06)');g.addColorStop(1,'rgba(7,6,4,0)');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    g=ctx.createRadialGradient(W*.05,H*.95,0,W*.05,H*.95,R*.6);
+    g.addColorStop(0,'rgba(190,150,70,.07)');g.addColorStop(1,'rgba(7,6,4,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    // stars drift left and slightly up, nearer stars faster; scroll adds parallax
+    ctx.lineWidth=.6;
+    for(const s of stars){
+            const yy = s.y;
+      const xx = s.x;
+      const a = .25+.55*(.5+.5*Math.sin(s.p));
+      ctx.globalAlpha=a; ctx.fillStyle=s.c; ctx.beginPath(); ctx.arc(xx,yy,s.r,0,6.283); ctx.fill();
+      if(s.r>1.45){ctx.strokeStyle=s.c; star4(xx,yy,s.r,a);}
+    }
+    ctx.globalAlpha=1;
+  }
+  size(); window.addEventListener('resize',()=>{size(); draw(0);});
+  draw(0);
+
+  /* ---------- Live 24/7 feed ---------- */
+  const events = [
+    ['✦','New subscriber','Found you through a Reel','nova'],
+    ['$','PPV unlocked','Custom bundle, sent by your chatter','nova'],
+    ['”','Reply sent','Fan in Sydney, in your voice','alt'],
+    ['♛','VIP tagged','Top spender moved to priority care','alt'],
+    ['↗','Reel posted','Scheduled for peak hours','alt'],
+    ['✦','Tip received','After a good-morning message','nova'],
+    ['”','Reply sent','Fan in London, in under a minute','alt'],
+    ['$','Renewal saved','Win-back message converted','nova']
+  ];
+  const feed=$('feed'), clock=$('clock'); let ei=0, mins=3*60+12;
+  function fmt(m){m=((m%1440)+1440)%1440;let h=Math.floor(m/60),mm=m%60,ap=h<12?'AM':'PM';h=h%12||12;return String(h).padStart(2,'0')+':'+String(mm).padStart(2,'0')+' '+ap;}
+  function push(){
+    const [ic,t,s,kind]=events[ei%events.length]; ei++; mins+=3+Math.floor(Math.random()*9);
+    const el=document.createElement('div'); el.className='ev';
+    const a=document.createElement('div'); a.className='ic'+(kind==='alt'?' alt':''); a.textContent=ic;
+    const b=document.createElement('div'); const bt=document.createElement('b'); bt.textContent=t; const bs=document.createElement('span'); bs.textContent=s; b.append(bt,bs);
+    const tm=document.createElement('time'); tm.textContent=fmt(mins);
+    el.append(a,b,tm); feed.prepend(el); clock.textContent=fmt(mins);
+    while(feed.children.length>5) feed.lastChild.remove();
+  }
+  for(let n=0;n<4;n++) push();
+  if(!reduce) setInterval(()=>{ if(!home.hidden) push(); }, 2600);
+
+  /* ---------- Micro-interactions ---------- */
+  document.querySelectorAll('.svc').forEach(card=>card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect();card.style.setProperty('--mx',(e.clientX-r.left)+'px');card.style.setProperty('--my',(e.clientY-r.top)+'px');}));
+  if(fine && !reduce) document.querySelectorAll('.mag').forEach(b=>{
+    b.addEventListener('pointermove',e=>{const r=b.getBoundingClientRect();b.style.transform='translate('+((e.clientX-r.left-r.width/2)*.18)+'px,'+((e.clientY-r.top-r.height/2)*.28)+'px)';});
+    b.addEventListener('pointerleave',()=>{b.style.transform='';});
+  });
+  if(!reduce && 'IntersectionObserver' in window){
+    const io=new IntersectionObserver(ents=>ents.forEach(en=>{
+      if(!en.isIntersecting) return; io.unobserve(en.target);
+      const el=en.target, to=+el.dataset.to, t0=performance.now();
+      (function step(t){const p=Math.min(1,(t-t0)/1200), v=Math.round(to*(1-Math.pow(1-p,3))); el.firstChild.nodeValue='$'+v+'K'; if(p<1) requestAnimationFrame(step);})(t0);
+    }),{threshold:.6});
+    document.querySelectorAll('.amt[data-to]').forEach(el=>io.observe(el));
+  }
+
+  /* Hero counters: count up on load, then the big one re-runs every few seconds */
+  function countTo(el,to,dur,fmt){const t0=performance.now();(function step(t){const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,4);el.textContent=fmt(to*e);if(p<1)requestAnimationFrame(step);})(t0);}
+  const big=$('bigCount'), money=v=>'$'+Math.round(v).toLocaleString('en-US');
+  if(!reduce){
+    countTo(big,100000,2600,money);
+    setInterval(()=>{ if(!home.hidden && window.scrollY<900) countTo(big,100000,2600,money); }, 9000);
+    document.querySelectorAll('.count').forEach(el=>{const to=+el.dataset.to,d=+(el.dataset.dec||0);countTo(el,to,2000,v=>v.toFixed(d));});
+  }
+
+  /* ---------- Application form ---------- */
+  const form=$('applyForm'), done=$('done'), btn=$('submitBtn'), BTN=btn.innerHTML;
+  function setErr(id,msg){const el=form.querySelector('.err[data-for="'+id+'"]'); if(el) el.textContent=msg||''; const f=$(id).closest('.field'); if(f) f.classList.toggle('invalid',!!msg);}
+  function method(){return form.querySelector('input[name="contact_method"]:checked').value;}
+  const STEP_FIELDS={1:['fullName','email'],2:['phone'],3:['earnings','adult']};
+  function validate(step){
+    const ids=STEP_FIELDS[step]; let ok=true, first=null; const fail=(id,m)=>{setErr(id,m); ok=false; first=first||id;};
+    ids.forEach(id=>setErr(id,''));
+    if(ids.includes('fullName') && $('fullName').value.trim().length<2) fail('fullName','Enter your name so we know who to ask for.');
+    if(ids.includes('email') && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('email').value.trim())) fail('email','Enter a valid email, like you@example.com.');
+    if(ids.includes('phone')){
+      const digits=$('phone').value.replace(/\D/g,'');
+      if(method()!=='Email' && digits.length<6) fail('phone','Add your '+method()+' number so we can message you.');
+      else if($('phone').value.trim() && digits.length<6) fail('phone','That number looks too short. Check it and try again.');
+    }
+    if(ids.includes('earnings') && !$('earnings').value) fail('earnings','Pick the range that fits you best.');
+    if(ids.includes('adult') && !$('adult').checked) fail('adult','Please confirm you are 18 or older to apply.');
+    if(first) $(first).focus();
+    return ok;
+  }
+  const steps=[...form.querySelectorAll('.step')], back=$('backBtn'), bars=[...document.querySelectorAll('.prog i')];
+  let step=1;
+  function show(n){
+    step=n; steps.forEach(f=>f.hidden=+f.dataset.step!==n);
+    bars.forEach((b,i)=>b.classList.toggle('on',i<n));
+    $('stepLbl').textContent='STEP '+n+' OF 3'; $('stepTitle').textContent=steps[n-1].dataset.title;
+    back.hidden=n===1;
+    btn.innerHTML = n===3 ? 'Send my application <span class="arr">→</span>' : 'Continue <span class="arr">→</span>';
+    const f=steps[n-1].querySelector('input:not([type=radio]),select'); if(f && n>1) f.focus({preventScroll:true});
+  }
+  back.addEventListener('click',()=>show(step-1));
+  form.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',()=>setErr(el.id,'')));
+  form.addEventListener('submit', async e=>{
+    e.preventDefault(); if(!validate(step)) return;
+    if(step<3){ show(step+1); return; }
+    const data=Object.fromEntries(new FormData(form).entries());
+    data.full_phone = data.phone ? (data.dial_code==='other'?'':data.dial_code+' ')+data.phone.trim() : '';
+    data.submitted_at = new Date().toISOString();
+    data._subject = 'New Nova Management application: '+data.name;
+    btn.disabled=true; back.disabled=true; btn.textContent='Sending…';
+    if(FORM_ENDPOINT){
+      try{ const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)}); if(!r.ok) throw new Error(r.status); }
+      catch(err){ btn.disabled=false; back.disabled=false; show(3); setErr('adult','We could not send your application. Check your connection and try again.'); return; }
+    }
+    $('doneName').textContent=data.name.trim().split(/\s+/)[0];
+    const rows=[['Email',data.email],['Contact via',data.contact_method+(data.full_phone?' · '+data.full_phone:'')],['Earnings',data.earnings],['Interested in',data.service]];
+    const recap=$('recap'); recap.textContent='';
+    rows.forEach(([k,v])=>{const d=document.createElement('div'),s=document.createElement('span'); s.textContent=k+': '; d.append(s,document.createTextNode(v)); recap.append(d);});
+    form.hidden=true; done.hidden=false; btn.disabled=false; back.disabled=false;
+    document.querySelector('.card-head').hidden=true;
+    window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+  });
+  $('againBtn').addEventListener('click',()=>{form.reset(); show(1); done.hidden=true; form.hidden=false; document.querySelector('.card-head').hidden=false; $('fullName').focus();});
+})();
+</script>
+</body>
+</html>
