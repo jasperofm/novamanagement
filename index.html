@@ -823,6 +823,7 @@ const FORM_ENDPOINT = "https://formsubmit.co/ajax/jasperudems555@gmail.com";
     data.submitted_at = new Date().toISOString();
     data._subject = 'New Nova Management application: '+data.name;
     data._template = 'table'; data._captcha = 'false';
+    data._autoresponse = 'Hi '+data.name.trim().split(/\s+/)[0]+', thanks for applying to Nova Management! Our team will review your application and reach out within 24 hours on '+data.contact_method+' to book your free strategy call. Talk soon, the Nova team.';
     btn.disabled=true; back.disabled=true; btn.textContent='Sending…';
     if(FORM_ENDPOINT){
       try{ const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)}); if(!r.ok) throw new Error(r.status); }
