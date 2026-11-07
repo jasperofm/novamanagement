@@ -296,6 +296,12 @@ select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(
 .done .recap{font-family:var(--mono);font-size:13px;color:var(--text);background:#0A0907;border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:left;display:grid;gap:6px;width:100%;max-width:440px;overflow-wrap:anywhere}
 .done .recap span{color:var(--muted)}
 .done-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.contact-box{display:grid;gap:12px;justify-items:center;width:100%;max-width:440px;padding:22px 18px;border-radius:16px;border:1px solid #3A3220;background:radial-gradient(100% 120% at 50% 0%,rgba(226,188,99,.12),transparent 70%),#0A0907}
+.cb-lbl{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.contact-box .btn-primary{width:100%}
+.cb-row{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;max-width:100%}
+.cb-row code{font-family:var(--mono);font-size:13px;color:var(--text);overflow-wrap:anywhere}
+.cb-copy{padding:8px 14px;font-size:13px}
 
 /* Footer */
 footer{border-top:1px solid var(--line);padding-block:56px 40px;color:var(--muted);font-size:14px;background:rgba(7,6,4,.6)}
@@ -634,8 +640,13 @@ footer{border-top:1px solid var(--line);padding-block:56px 40px;color:var(--mute
           <h3>You're in, <span id="doneName"></span>.</h3>
           <p>Thanks for applying to Nova Management. Our team will review your application and reach out within 24 hours to book your strategy call.</p>
           <div class="recap" id="recap"></div>
+          <div class="contact-box">
+            <span class="cb-lbl">Chat with the Nova team now</span>
+            <a class="btn btn-primary" id="mailBtn" href="mailto:jasperudems555@gmail.com?subject=Nova%20Management%20application">Message us by email <span class="arr">→</span></a>
+            <div class="cb-row"><code id="mailAddr">jasperudems555@gmail.com</code><button class="btn btn-ghost cb-copy" type="button" id="copyMail">Copy</button></div>
+          </div>
           <div class="done-actions">
-            <a class="btn btn-primary" href="#top">Back to home</a>
+            <a class="btn btn-ghost" href="#top">Back to home</a>
             <button class="btn btn-ghost" type="button" id="againBtn">Submit another</button>
           </div>
         </div>
@@ -837,6 +848,11 @@ const FORM_ENDPOINT = "https://formsubmit.co/ajax/jasperudems555@gmail.com";
     document.querySelector('.card-head').hidden=true;
     window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
   });
+  $('copyMail').addEventListener('click',()=>{const b=$('copyMail'),t=$('mailAddr').textContent;
+    const ok=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1800);};
+    const sel=()=>{const r=document.createRange();r.selectNodeContents($('mailAddr'));const w=getSelection();w.removeAllRanges();w.addRange(r);};
+    try{navigator.clipboard.writeText(t).then(ok,sel);}catch(e){sel();}});
+  $('mailBtn').addEventListener('click',()=>{const n=$('doneName').textContent;$('mailBtn').href='mailto:jasperudems555@gmail.com?subject='+encodeURIComponent('Nova Management application: '+n)+'&body='+encodeURIComponent('Hi Nova team, I just applied. My name is '+n+'.');});
   $('againBtn').addEventListener('click',()=>{form.reset(); show(1); done.hidden=true; form.hidden=false; document.querySelector('.card-head').hidden=false; $('fullName').focus();});
 })();
 </script>
